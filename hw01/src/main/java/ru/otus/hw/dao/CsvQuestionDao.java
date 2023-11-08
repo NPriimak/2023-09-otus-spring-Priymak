@@ -19,7 +19,8 @@ public class CsvQuestionDao implements QuestionDao {
 
     @Override
     public List<Question> findAll() {
-        return readQuestionsFromResource(getQuestionsResource());
+        final var resource = getQuestionsResource();
+        return readQuestionsFromResource(resource);
     }
 
     /**

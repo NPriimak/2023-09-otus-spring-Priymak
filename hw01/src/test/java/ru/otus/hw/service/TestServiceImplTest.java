@@ -6,10 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.otus.hw.converter.QuestionConverter;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
-import ru.otus.hw.exceptions.QuestionsAreEmptyException;
+import ru.otus.hw.exceptions.TestServiceException;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,9 @@ class TestServiceImplTest {
     @Mock
     private QuestionDao questionDao;
 
+    @Mock
+    private QuestionConverter converter;
+
     @InjectMocks
     private TestServiceImpl testService;
 
@@ -35,12 +39,13 @@ class TestServiceImplTest {
     void executeTestWithEmptyQuestionsTest() {
         when(questionDao.findAll()).thenReturn(Collections.emptyList());
 
-        assertThrows(QuestionsAreEmptyException.class, () -> testService.executeTest());
+        assertThrows(TestServiceException.class, () -> testService.executeTest());
     }
 
     @DisplayName("вызывать сервис для отобрадения вопросов и не бросать ошибок")
     @Test
     void executeTestSuccess() {
+        when(converter.convertToString(any(), anyInt())).thenCallRealMethod();
         when(questionDao.findAll())
                 .thenReturn(List.of(
                         new Question("1",
@@ -57,8 +62,7 @@ class TestServiceImplTest {
 
         assertDoesNotThrow(testService::executeTest);
         verify(ioService, times(3)).printLine(anyString());
-        verify(ioService, times(6)).printFormattedLine(anyString(), any());
-        verify(ioService, times(2)).printFormattedLine(anyString(), any(), any());
+        verify(ioService, times(1)).printFormattedLine(anyString());
     }
 
 }

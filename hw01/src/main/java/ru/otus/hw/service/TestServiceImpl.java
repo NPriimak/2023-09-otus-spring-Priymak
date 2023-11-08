@@ -2,27 +2,35 @@ package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
+import ru.otus.hw.converter.QuestionConverter;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionsAreEmptyException;
+import ru.otus.hw.exceptions.TestServiceException;
 
 import java.util.List;
+
+import static java.lang.String.format;
 
 @RequiredArgsConstructor
 public class TestServiceImpl implements TestService {
 
-    public static final String QUESTION_TEMPLATE = "%d) %s";
-
-    public static final String ANSWER_TEMPLATE = "\t• %s";
+    public static final String CLIENT_ERROR_TEMPLATE = "Exception in process of execution program: %s";
 
     private final IOService ioService;
 
     private final QuestionDao questionDao;
 
+    private final QuestionConverter questionConverter;
+
     @Override
     public void executeTest() {
-        final var questions = questionDao.findAll();
-        printQuestionsWithAnswers(questions);
+        try {
+            final var questions = questionDao.findAll();
+            printQuestionsWithAnswers(questions);
+        } catch (Exception e) {
+            throw new TestServiceException(format(CLIENT_ERROR_TEMPLATE, e.getMessage()));
+        }
     }
 
     /**
@@ -34,24 +42,19 @@ public class TestServiceImpl implements TestService {
         if (CollectionUtils.isEmpty(questions)) {
             throw new QuestionsAreEmptyException("There are no questions at all");
         }
+        printEmptyLine();
+        ioService.printFormattedLine("Please answer the questions below%n");
 
         var questionCounter = 1;
 
-        ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
-
         for (Question question : questions) {
-            ioService.printFormattedLine(QUESTION_TEMPLATE, questionCounter, question.text());
-            printAnswers(question);
-            ioService.printLine("");
+            final var questionString = questionConverter.convertToString(question, questionCounter);
+            ioService.printLine(questionString);
             questionCounter++;
         }
     }
 
-    private void printAnswers(Question question) {
-        if (CollectionUtils.isEmpty(question.answers())) {
-            return;
-        }
-        question.answers().forEach(answer -> ioService.printFormattedLine(ANSWER_TEMPLATE, answer.text()));
+    private void printEmptyLine() {
+        ioService.printLine("");
     }
 }
