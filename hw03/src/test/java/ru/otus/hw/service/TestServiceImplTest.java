@@ -2,19 +2,14 @@ package ru.otus.hw.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import ru.otus.hw.base.AbstractSpringBootTest;
 import ru.otus.hw.converter.QuestionConverter;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
-import ru.otus.hw.exceptions.TestServiceException;
 import ru.otus.hw.service.impl.TestServiceImpl;
 
 import java.util.Collections;
@@ -23,8 +18,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 @DisplayName("Сервис тестирования должен ")
-class TestServiceImplTest extends AbstractSpringBootTest {
+class TestServiceImplTest {
 
     @MockBean
     private IOService ioService;

@@ -11,7 +11,7 @@ import java.util.Map;
 import static java.util.Optional.ofNullable;
 
 @ConfigurationProperties(prefix = "test")
-public class AppConfig implements TestConfig, TestFileNameProvider {
+public class AppConfig implements TestConfig, TestFileNameProvider, LocaleConfig {
 
     private final int rightAnswersCountToPass;
 
