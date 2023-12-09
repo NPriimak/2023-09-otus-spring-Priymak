@@ -15,7 +15,7 @@ class AppConfigLocaleEnTest {
     private AppConfig appConfig;
 
     @Test
-    @DisplayName("читать кол-во необзодимых верных ответ")
+    @DisplayName("читать кол-во необходимых верных ответ")
     void getRightAnswersCountToPass() {
         assertEquals(3, appConfig.getRightAnswersCountToPass());
     }
