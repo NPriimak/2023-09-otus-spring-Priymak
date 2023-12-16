@@ -12,8 +12,7 @@ import ru.otus.hw.domain.TestResult;
 import ru.otus.hw.exceptions.QuestionsAreEmptyException;
 import ru.otus.hw.exceptions.TestServiceException;
 import ru.otus.hw.service.AnswerValidatorService;
-import ru.otus.hw.service.IOService;
-import ru.otus.hw.service.LocalizedMessageSupplier;
+import ru.otus.hw.service.LocalizedIOService;
 import ru.otus.hw.service.TestService;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class TestServiceImpl implements TestService {
 
     private static final String CLIENT_ERROR_KEY = "test.clientError";
 
-    private final LocalizedIOServiceImpl ioService;
+    private final LocalizedIOService ioService;
 
     private final QuestionDao questionDao;
 
@@ -47,7 +46,7 @@ public class TestServiceImpl implements TestService {
                 final var answer = askQuestion(question, questionCounter);
                 final var isCorrect = answerValidatorService.validate(question, answer);
                 testResult.applyAnswer(question, isCorrect);
-                questionCounter ++;
+                questionCounter++;
             }
             return testResult;
         } catch (Exception e) {
@@ -60,7 +59,8 @@ public class TestServiceImpl implements TestService {
 
     /**
      * Метод для вывода запроса и ожадиния ответа пользователя
-     * @param question вопрос
+     *
+     * @param question        вопрос
      * @param questionCounter номер вопроса
      * @return ответ пользователя
      */
