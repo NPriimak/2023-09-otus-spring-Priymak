@@ -9,4 +9,9 @@
 ## hw02
     branch: hw02
     location: hw02
+    comments: Сдано, слито в мастер
+
+## hw03
+    branch: hw03
+    location: hw03
     comments: 
