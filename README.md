@@ -14,4 +14,10 @@
 ## hw03
     branch: hw03
     location: hw03
-    comments: 
+    comments: Сдано, слито в мастер
+
+## hw04
+    branch: hw04
+    location: hw04
+    comments: На проверке
+
