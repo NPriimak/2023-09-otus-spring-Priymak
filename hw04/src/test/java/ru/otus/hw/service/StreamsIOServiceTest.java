@@ -1,30 +1,38 @@
 package ru.otus.hw.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import ru.otus.hw.service.impl.StreamsIOService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 @DisplayName("Сервис вывода должен ")
 public class StreamsIOServiceTest {
 
-    @Test
-    @DisplayName("печатать строку в консоль")
-    public void testPrintLine() {
+    private OutputStream outputStream;
+    private StreamsIOService ioService;
+
+    @BeforeEach
+    public void initService() {
         // Создаем ByteArrayOutputStream для перехвата вывода
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream = new ByteArrayOutputStream();
         ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[1024]);
         PrintStream printStream = new PrintStream(outputStream);
 
         // Создаем объект StreamsIOService с перехваченным выводом
-        StreamsIOService ioService = new StreamsIOService(printStream, inputStream);
+        ioService = new StreamsIOService(printStream, inputStream);
+    }
+
+    @Test
+    @DisplayName("печатать строку в консоль")
+    public void testPrintLine() {
+
 
         // Вызываем метод printLine
         ioService.printLine("Привет, Мир!");
@@ -39,14 +47,6 @@ public class StreamsIOServiceTest {
     @Test
     @DisplayName("печатать отформатированную строку в консоль")
     public void testPrintFormattedLine() {
-        // Создаем ByteArrayOutputStream для перехвата вывода
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(new byte[1024]);
-        PrintStream printStream = new PrintStream(outputStream);
-
-        // Создаем объект StreamsIOService с перехваченным выводом
-        StreamsIOService ioService = new StreamsIOService(printStream, inputStream);
-
         // Вызываем метод printFormattedLine
         ioService.printFormattedLine("Ответ: %d", 42);
 

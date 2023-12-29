@@ -1,10 +1,11 @@
-package ru.otus.hw.service;
+package ru.otus.hw.dao.integration;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.otus.hw.dao.ResultDao;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
@@ -13,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @DisplayName("Сервис хранения результатов должен ")
-class ResultHolderTest {
+class ResultDaoTest {
 
     @Autowired
-    private ResultHolder resultHolder;
+    private ResultDao resultDao;
 
     @Test
     @DisplayName("сохранять результаты")
@@ -26,10 +27,10 @@ class ResultHolderTest {
 
         final var result2 = getResult();
         result2.setRightAnswersCount(20);
-        assertDoesNotThrow(() -> resultHolder.save(result1));
-        assertDoesNotThrow(() -> resultHolder.save(result2));
+        assertDoesNotThrow(() -> resultDao.save(result1));
+        assertDoesNotThrow(() -> resultDao.save(result2));
         assertEquals(2,
-                resultHolder.getPreviousResultsForStudent(
+                resultDao.getPreviousResultsForStudent(
                         result1.getStudent().firstName(),
                         result1.getStudent().lastName()
                 ).size()
@@ -44,10 +45,10 @@ class ResultHolderTest {
 
         final var result2 = new TestResult(new Student("3", "4"));
         result2.setRightAnswersCount(20);
-        assertDoesNotThrow(() -> resultHolder.save(result1));
-        assertDoesNotThrow(() -> resultHolder.save(result2));
+        assertDoesNotThrow(() -> resultDao.save(result1));
+        assertDoesNotThrow(() -> resultDao.save(result2));
         assertEquals(2,
-                resultHolder.getAllPreviousResults().size()
+                resultDao.getAllPreviousResults().size()
         );
     }
 
@@ -59,10 +60,10 @@ class ResultHolderTest {
 
         final var result2 = getResult();
         result2.setRightAnswersCount(20);
-        assertDoesNotThrow(() -> resultHolder.save(result1));
-        assertDoesNotThrow(() -> resultHolder.save(result2));
+        assertDoesNotThrow(() -> resultDao.save(result1));
+        assertDoesNotThrow(() -> resultDao.save(result2));
         assertEquals(2,
-                resultHolder.getPreviousResultsForStudent(
+                resultDao.getPreviousResultsForStudent(
                         result1.getStudent().firstName(),
                         result1.getStudent().lastName()
                 ).size()

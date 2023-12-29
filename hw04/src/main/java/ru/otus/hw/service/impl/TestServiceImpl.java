@@ -13,6 +13,7 @@ import ru.otus.hw.exceptions.QuestionsAreEmptyException;
 import ru.otus.hw.exceptions.TestServiceException;
 import ru.otus.hw.service.AnswerValidatorService;
 import ru.otus.hw.service.LocalizedIOService;
+import ru.otus.hw.service.PersistentResultService;
 import ru.otus.hw.service.TestService;
 
 import java.util.List;
@@ -34,6 +35,8 @@ public class TestServiceImpl implements TestService {
 
     private final AnswerValidatorService answerValidatorService;
 
+    private final PersistentResultService persistentResultService;
+
     @Override
     public TestResult executeTestFor(Student student) {
         try {
@@ -48,12 +51,23 @@ public class TestServiceImpl implements TestService {
                 testResult.applyAnswer(question, isCorrect);
                 questionCounter++;
             }
+            persistentResultService.save(testResult);
             return testResult;
         } catch (Exception e) {
             log.error("Exception in process of executing test: {}", e.getMessage(), e);
             ioService.printLineLocalized(CLIENT_ERROR_KEY);
             throw new TestServiceException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<TestResult> getAllPreviousResults() {
+        return persistentResultService.getAllPreviousResults();
+    }
+
+    @Override
+    public List<TestResult> getPreviousResultsForStudent(String firstName, String lastName) {
+        return persistentResultService.getPreviousResultsForStudent(firstName, lastName);
     }
 
 

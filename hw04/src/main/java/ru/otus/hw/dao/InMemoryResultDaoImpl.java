@@ -1,13 +1,10 @@
-package ru.otus.hw.service.impl;
+package ru.otus.hw.dao;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import ru.otus.hw.converter.TestResultConverter;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
-import ru.otus.hw.domain.TestResultDto;
-import ru.otus.hw.service.ResultHolder;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,12 +17,10 @@ import static java.util.Optional.ofNullable;
 @Service
 @RequiredArgsConstructor
 @Primary
-public class InMemoryResultHolderImpl implements ResultHolder {
+public class InMemoryResultDaoImpl implements ResultDao {
 
     //Т.к. конкурентного доступа не подразумевается, используем обычную мапу
     private final Map<Student, List<TestResult>> resultMap = new HashMap<>();
-
-    private final TestResultConverter resultConverter;
 
     @Override
     public void save(TestResult testResult) {
@@ -37,18 +32,16 @@ public class InMemoryResultHolderImpl implements ResultHolder {
     }
 
     @Override
-    public List<TestResultDto> getAllPreviousResults() {
+    public List<TestResult> getAllPreviousResults() {
         return resultMap.values()
                 .stream()
                 .flatMap(List::stream)
-                .map(resultConverter::toDto)
                 .toList();
     }
 
     @Override
-    public List<TestResultDto> getPreviousResultsForStudent(String firstName, String lastName) {
+    public List<TestResult> getPreviousResultsForStudent(String firstName, String lastName) {
         return ofNullable(resultMap.get(new Student(firstName, lastName)))
-                .map(results -> results.stream().map(resultConverter::toDto).toList())
                 .orElseGet(Collections::emptyList);
     }
 }

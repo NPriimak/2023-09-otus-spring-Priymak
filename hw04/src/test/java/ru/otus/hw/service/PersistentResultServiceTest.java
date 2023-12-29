@@ -5,15 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.otus.hw.dao.ResultDao;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
-import ru.otus.hw.domain.TestResultDto;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -21,9 +21,7 @@ import static org.mockito.Mockito.*;
 class PersistentResultServiceTest {
 
     @MockBean
-    private ResultService service;
-    @MockBean
-    private ResultHolder resultHolder;
+    private ResultDao resultDao;
 
     @Autowired
     private PersistentResultService resultService;
@@ -33,33 +31,33 @@ class PersistentResultServiceTest {
     void save() {
         final var testResult = new TestResult(new Student("test", "test"));
         assertDoesNotThrow(() -> resultService.save(testResult));
-        verify(resultHolder, times(1)).save(eq(testResult));
+        verify(resultDao, times(1)).save(eq(testResult));
     }
 
     @Test
     @DisplayName("вовзращать все рузльтаты тестов")
     void getAllPreviousResults() {
-        when(resultHolder.getAllPreviousResults())
+        when(resultDao.getAllPreviousResults())
                 .thenReturn(List.of(
-                        new TestResultDto("test", 10, 5),
-                        new TestResultDto("test", 10, 6)
+                        new TestResult(new Student("test", "test")),
+                        new TestResult(new Student("atest", "atest"))
                 ));
 
         final var res = assertDoesNotThrow(() -> resultService.getAllPreviousResults());
-        verify(resultHolder, times(1)).getAllPreviousResults();
+        verify(resultDao, times(1)).getAllPreviousResults();
         assertEquals(2, res.size());
     }
 
     @Test
     @DisplayName("возвращать результаты для конкретного студента")
     void getPreviousResultsForStudent() {
-        when(resultHolder.getPreviousResultsForStudent(eq("test"), eq("test")))
+        when(resultDao.getPreviousResultsForStudent(eq("test"), eq("test")))
                 .thenReturn(List.of(
-                        new TestResultDto("test", 10, 5),
-                        new TestResultDto("test", 10, 6)
+                        new TestResult(new Student("test", "test")),
+                        new TestResult(new Student("atest", "atest"))
                 ));
 
-        when(resultHolder.getPreviousResultsForStudent(eq("atest"), eq("atest")))
+        when(resultDao.getPreviousResultsForStudent(eq("atest"), eq("atest")))
                 .thenReturn(Collections.emptyList());
 
         final var res1 = assertDoesNotThrow(() -> resultService.getPreviousResultsForStudent("test", "test"));
@@ -67,14 +65,5 @@ class PersistentResultServiceTest {
 
         final var res2 = assertDoesNotThrow(() -> resultService.getPreviousResultsForStudent("atest", "atest"));
         assertEquals(0, res2.size());
-    }
-
-    @Test
-    @DisplayName("показывать результаты")
-    void showResult() {
-        final var testResult = new TestResult(new Student("test", "test"));
-
-        assertDoesNotThrow(() -> resultService.showResult(testResult));
-        verify(service, times(1)).showResult(eq(testResult));
     }
 }
