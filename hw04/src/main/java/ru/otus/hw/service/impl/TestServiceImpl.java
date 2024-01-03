@@ -13,7 +13,6 @@ import ru.otus.hw.exceptions.QuestionsAreEmptyException;
 import ru.otus.hw.exceptions.TestServiceException;
 import ru.otus.hw.service.AnswerValidatorService;
 import ru.otus.hw.service.LocalizedIOService;
-import ru.otus.hw.service.PersistentResultService;
 import ru.otus.hw.service.TestService;
 
 import java.util.List;

@@ -4,7 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.domain.TestResult;
-import ru.otus.hw.service.*;
+import ru.otus.hw.service.PersistentResultService;
+import ru.otus.hw.service.ResultService;
+import ru.otus.hw.service.StudentService;
+import ru.otus.hw.service.TestRunnerService;
+import ru.otus.hw.service.TestService;
 
 import java.util.List;
 
