@@ -35,8 +35,6 @@ public class TestServiceImpl implements TestService {
 
     private final AnswerValidatorService answerValidatorService;
 
-    private final PersistentResultService persistentResultService;
-
     @Override
     public TestResult executeTestFor(Student student) {
         try {
@@ -51,7 +49,6 @@ public class TestServiceImpl implements TestService {
                 testResult.applyAnswer(question, isCorrect);
                 questionCounter++;
             }
-            persistentResultService.save(testResult);
             return testResult;
         } catch (Exception e) {
             log.error("Exception in process of executing test: {}", e.getMessage(), e);
@@ -60,34 +57,11 @@ public class TestServiceImpl implements TestService {
         }
     }
 
-    @Override
-    public List<TestResult> getAllPreviousResults() {
-        return persistentResultService.getAllPreviousResults();
-    }
-
-    @Override
-    public List<TestResult> getPreviousResultsForStudent(String firstName, String lastName) {
-        return persistentResultService.getPreviousResultsForStudent(firstName, lastName);
-    }
-
-
-    /**
-     * Метод для вывода запроса и ожадиния ответа пользователя
-     *
-     * @param question        вопрос
-     * @param questionCounter номер вопроса
-     * @return ответ пользователя
-     */
     private String askQuestion(Question question, int questionCounter) {
         final var questionString = questionConverter.convertToString(question, questionCounter);
         return ioService.readStringWithPrompt(questionString).trim();
     }
 
-    /**
-     * Получение списка вопросов
-     *
-     * @return список вопросов или кидает ошибку, если вопросов не обнаружено
-     */
     private List<Question> getQuestionList() {
         final var questions = questionDao.findAll();
 
@@ -96,16 +70,5 @@ public class TestServiceImpl implements TestService {
         }
 
         return questions;
-    }
-
-    /**
-     * Метод для печати списка вопроса с вариантами ответов
-     *
-     * @param question        впрос с вариантами ответов
-     * @param questionCounter номер вопроса
-     */
-    private void printQuestionWithAnswers(Question question, int questionCounter) {
-        final var questionString = questionConverter.convertToString(question, questionCounter);
-        ioService.printLine(questionString);
     }
 }

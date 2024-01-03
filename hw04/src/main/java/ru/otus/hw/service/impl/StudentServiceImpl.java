@@ -3,6 +3,7 @@ package ru.otus.hw.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.hw.domain.Student;
+import ru.otus.hw.service.LocalizedIOService;
 import ru.otus.hw.service.StudentService;
 
 @Service
@@ -13,7 +14,7 @@ public class StudentServiceImpl implements StudentService {
 
     private static final String ENTER_LAST_NAME_MESSAGE_KEY = "student.inputLastName";
 
-   private final LocalizedIOServiceImpl localizedIOService;
+    private final LocalizedIOService localizedIOService;
 
     @Override
     public Student determineCurrentStudent() {
